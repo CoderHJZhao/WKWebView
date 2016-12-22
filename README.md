@@ -44,11 +44,10 @@
 
 > 在UIWebView中，网页代码编写的弹框，不需要我们自己处理，UIWebView自己就会自动处理。但是在WKWebView中，我们需要实现<WKUIDelegate>代理，并在代理中主动实现UIAletView或者UIAlertController。
 
-<img src="emoji/smile" width="18"/>**温馨提示**<img src="emoji/smile" width="18"/>
+😊温馨提示😊
 [欢迎使用PublicMethodTool](https://github.com/CoderHJZhao/PublicMethodTool)
-```
-如果使用了WKWebView，还是建议使用UIAlertController，因为UIAletView弹出的时候会在缘由的keywindow上新建一个window,从而篡改跟控制器的效果，非常的不安全，笔者GitHub上的「PublicMethodTool」中已经有对UIAlertController的封装，大家可以参考使用。
-```
+>如果使用了WKWebView，还是建议使用UIAlertController，因为UIAletView弹出的时候会在缘由的keywindow上新建一个window,从而篡改跟控制器的效果，非常的不安全，笔者GitHub上的「PublicMethodTool」中已经有对UIAlertController的封装，大家可以参考使用。
+
 
 
 
@@ -113,15 +112,17 @@
 > WKWebView不会再从NSHTTPCookieStorage取cookie，而是需要在初始化时通过WKUserScript写入。
 
 在讲接下来的内容之前，先熟悉下这个类
+
 ```
 WKUserScript：在WKUserContentController中，所有使用到WKUserScript。WKUserContentController是用于与JS交互的类，而所注入的JS是WKUserScript对象。
 ```
-```
+
 
 
 WKWebView Cookie 写入 三种方式
 
 JS注入1（推荐）
+
 ```
 WKUserContentController* userContentController = WKUserContentController.new;
 WKUserScript * cookieScript = [[WKUserScript alloc] initWithSource: @"document.cookie ='TeskCookieKey1=TeskCookieValue1';document.cookie = 'TeskCookieKey2=TeskCookieValue2';"injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
