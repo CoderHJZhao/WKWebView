@@ -44,7 +44,7 @@
 
 > 在UIWebView中，网页代码编写的弹框，不需要我们自己处理，UIWebView自己就会自动处理。但是在WKWebView中，我们需要实现<WKUIDelegate>代理，并在代理中主动实现UIAletView或者UIAlertController。
 
-<img src="emoji/smile" width="18"/>**温馨提示**<img src="emoji/smile" width="18"/>
+😄**温馨提示**😄
 [欢迎使用PublicMethodTool](https://github.com/CoderHJZhao/PublicMethodTool)
 ```
 如果使用了WKWebView，还是建议使用UIAlertController，因为UIAletView弹出的时候会在缘由的keywindow上新建一个window,从而篡改跟控制器的效果，非常的不安全，笔者GitHub上的「PublicMethodTool」中已经有对UIAlertController的封装，大家可以参考使用。
@@ -197,21 +197,27 @@ JS调用OC
 
 
 ```
-//首先注册Js方法requestData，然后回调中调用本地OC方法
-    [_bridge registerHandler:@"APPJsBridge.requestData" handler:^(id data, WVJBResponseCallback responseCallback) {
-    //调用成功回调本地的OC方法
-        
-    }];
+// JS主动调用OjbC的方法
+// 这是JS会调用getUserIdFromObjC方法，这是OC注册给JS调用的
+// JS需要回调，当然JS也可以传参数过来。data就是JS所传的参数，不一定需要传
+// OC端通过responseCallback回调JS端，JS就可以得到所需要的数据
+[self.bridge registerHandler:@"APPJsBridge.requestData" handler:^(id data, WVJBResponseCallback responseCallback) {
+    NSLog(@"js call getUserIdFromObjC, data from js is %@", data);
+    if (responseCallback) {
+      // 反馈给JS
+      responseCallback(@{@"userId": @"123456"});
+    }
+}];
+
 
 ```
 
 OC调用JS
 
 ```
-//OC调用JS方法，发送数据给网页
- [_bridge callHandler:@"APPJsBridge.requestData" data:data responseCallback:^(id responseData) {
-       //调用成功回调，具体看前端如何定义逻辑
-    }];
+[self.bridge callHandler:@"getUserInfos" data:@{@"name": @"哈哈"} responseCallback:^(id responseData) {
+    NSLog(@"from js: %@", responseData);
+}];
 ```
 
 （更多iOS开发干货，欢迎关注  [微博@3W_狮兄 ](http://weibo.com/hanjunzhao/) ）
