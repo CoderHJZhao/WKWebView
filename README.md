@@ -198,21 +198,27 @@ JS调用OC
 
 
 ```
-//首先注册Js方法requestData，然后回调中调用本地OC方法
-    [_bridge registerHandler:@"APPJsBridge.requestData" handler:^(id data, WVJBResponseCallback responseCallback) {
-    //调用成功回调本地的OC方法
-        
-    }];
+// JS主动调用OjbC的方法
+// 这是JS会调用getUserIdFromObjC方法，这是OC注册给JS调用的
+// JS需要回调，当然JS也可以传参数过来。data就是JS所传的参数，不一定需要传
+// OC端通过responseCallback回调JS端，JS就可以得到所需要的数据
+[self.bridge registerHandler:@"APPJsBridge.requestData" handler:^(id data, WVJBResponseCallback responseCallback) {
+    NSLog(@"js call getUserIdFromObjC, data from js is %@", data);
+    if (responseCallback) {
+      // 反馈给JS
+      responseCallback(@{@"userId": @"123456"});
+    }
+}];
+
 
 ```
 
 OC调用JS
 
 ```
-//OC调用JS方法，发送数据给网页
- [_bridge callHandler:@"APPJsBridge.requestData" data:data responseCallback:^(id responseData) {
-       //调用成功回调，具体看前端如何定义逻辑
-    }];
+[self.bridge callHandler:@"getUserInfos" data:@{@"name": @"哈哈"} responseCallback:^(id responseData) {
+    NSLog(@"from js: %@", responseData);
+}];
 ```
 
 （更多iOS开发干货，欢迎关注  [微博@3W_狮兄 ](http://weibo.com/hanjunzhao/) ）
