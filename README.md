@@ -10,7 +10,7 @@
 ###### 2⃣️. webView请求成功失败等代理
 
 
-```
+```objc
 #pragma mark - WKNavigationDelegate
 
 // 页面开始加载时调用
@@ -54,7 +54,7 @@
 以下是WKUIDelegate中要实现的方法，仅供参考！
 
 
-```
+```objc
 #pragma mark - WKUIDelegate（提示窗口）
 
 - (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler{
@@ -97,7 +97,7 @@
 实现以下代理即可
 
 
-```
+```objc
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler{
     //navigationAction.request.URL.absoluteString  这里就是WebView中请求的URL，大家可以按需截取URL后面跟的参数，WebView 中网页跳转都会经过这个方法，包括WebView第一次加载的时候。
 }
@@ -113,7 +113,7 @@
 
 在讲接下来的内容之前，先熟悉下这个类
 
-```
+```objc
 WKUserScript：在WKUserContentController中，所有使用到WKUserScript。WKUserContentController是用于与JS交互的类，而所注入的JS是WKUserScript对象。
 ```
 
@@ -123,7 +123,7 @@ WKWebView Cookie 写入 三种方式
 
 JS注入1（推荐）
 
-```
+```objc
 WKUserContentController* userContentController = WKUserContentController.new;
 WKUserScript * cookieScript = [[WKUserScript alloc] initWithSource: @"document.cookie ='TeskCookieKey1=TeskCookieValue1';document.cookie = 'TeskCookieKey2=TeskCookieValue2';"injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
  
@@ -135,7 +135,7 @@ WKWebView * webView = [[WKWebView alloc] initWithFrame:CGRectMake(/*set your val
 
 JS注入2
 
-```
+```objc
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     [webView evaluateJavaScript:@"document.cookie ='TeskCookieKey1=TeskCookieValue1';" completionHandler:^(id result, NSError *error) {
         //...
@@ -145,7 +145,7 @@ JS注入2
 
 NSMutableURLRequest（测试无效，暂时不清楚什么原因）
 
-```
+```objc
 NSMutableURLRequest *request= [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://dev.skyfox.org/cookie.php"]];
 //[request setHTTPShouldHandleCookies:YES];
 [request setValue:[NSString stringWithFormat:@"%@=%@",@"testwkcookie", @"testwkcookievalue"] forHTTPHeaderField:@"Cookie"];
@@ -158,7 +158,7 @@ NSMutableURLRequest 注入的PHP等动态语言直接能从$_COOKIE对象中获�
 ###### 6⃣️️️.WKWebView Cookie 读取
 
 
-```
+```objc
 WKWebsiteDataStore在iOS 9和OS X 10.11中引入，是一个新的API，它用于管理一个网站站点存储的数据，例如cookies，它是你网页的 WKWebViewConfiguration上的一个可读写的属性。你可以根据类型或者时间来删除数据，例如cookies和缓存，你可以用非持久性数 据存储来改变配置。
 
 
@@ -182,7 +182,7 @@ WKWebsiteDataStore在iOS 9和OS X 10.11中引入，是一个新的API，它用�
 初始化方法
 
 
-```
+```objc
  //配置WKWebViewJavascriptBridge
     [WKWebViewJavascriptBridge enableLogging];
     //和webview建立桥接
@@ -197,7 +197,7 @@ WKWebsiteDataStore在iOS 9和OS X 10.11中引入，是一个新的API，它用�
 JS调用OC
 
 
-```
+```objc
 // JS主动调用OjbC的方法
 // 这是JS会调用getUserIdFromObjC方法，这是OC注册给JS调用的
 // JS需要回调，当然JS也可以传参数过来。data就是JS所传的参数，不一定需要传
@@ -215,7 +215,7 @@ JS调用OC
 
 OC调用JS
 
-```
+```objc
 [self.bridge callHandler:@"getUserInfos" data:@{@"name": @"哈哈"} responseCallback:^(id responseData) {
     NSLog(@"from js: %@", responseData);
 }];
